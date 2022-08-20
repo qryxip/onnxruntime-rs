@@ -117,6 +117,7 @@ to download.
 
 use std::{
     ffi::c_void,
+    fmt::{self, Debug},
     ptr::null_mut,
     sync::{atomic::AtomicPtr, Arc, Mutex},
 };
@@ -192,6 +193,21 @@ fn g_ort() -> sys::OrtApi {
 
 fn char_p_to_string(raw: *const i8) -> Result<String> {
     let c_string = unsafe { std::ffi::CStr::from_ptr(raw as *mut i8).to_owned() };
+
+    if c_string.to_str().is_err() {
+        struct Base64<'a>(&'a [u8]);
+
+        impl Debug for Base64<'_> {
+            fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+                write!(f, "{}", base64::encode(self.0))
+            }
+        }
+
+        let error_message = c_string.to_bytes();
+        dbg!(Base64(error_message));
+        dbg!(String::from_utf8_lossy(error_message));
+        dbg!(encoding_rs::SHIFT_JIS.decode(error_message).0);
+    }
 
     match c_string.into_string() {
         Ok(string) => Ok(string),
