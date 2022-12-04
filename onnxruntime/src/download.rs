@@ -55,7 +55,6 @@ impl ModelUrl for AvailableOnnxModel {
 
 impl AvailableOnnxModel {
     #[cfg(feature = "model-fetching")]
-    #[tracing::instrument]
     pub(crate) fn download_to<P>(&self, download_dir: P) -> Result<PathBuf>
     where
         P: AsRef<Path> + std::fmt::Debug,

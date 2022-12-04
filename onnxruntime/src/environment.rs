@@ -81,7 +81,6 @@ impl Environment {
         *self.env.lock().unwrap().env_ptr.get_mut()
     }
 
-    #[tracing::instrument]
     fn new(name: String, log_level: LoggingLevel) -> Result<Environment> {
         // NOTE: Because 'G_ENV' is a lazy_static, locking it will, initially, create
         //      a new Arc<Mutex<EnvironmentSingleton>> with a strong count of 1.
@@ -155,7 +154,6 @@ impl Environment {
 }
 
 impl Drop for Environment {
-    #[tracing::instrument]
     fn drop(&mut self) {
         debug!(
             global_arc_count = Arc::strong_count(&G_ENV),

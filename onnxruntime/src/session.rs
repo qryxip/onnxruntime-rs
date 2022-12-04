@@ -80,7 +80,6 @@ pub struct SessionBuilder<'a> {
 }
 
 impl<'a> Drop for SessionBuilder<'a> {
-    #[tracing::instrument]
     fn drop(&mut self) {
         if self.session_options_ptr.is_null() {
             error!("Session options pointer is null, not dropping");
@@ -485,7 +484,6 @@ pub trait AnyArray: Debug {
 }
 
 impl<'a> Drop for Session<'a> {
-    #[tracing::instrument]
     fn drop(&mut self) {
         debug!("Dropping the session.");
         if self.session_ptr.is_null() {

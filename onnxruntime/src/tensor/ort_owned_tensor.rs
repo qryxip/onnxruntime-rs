@@ -127,7 +127,6 @@ where
     D: ndarray::Dimension,
     'm: 't, // 'm outlives 't
 {
-    #[tracing::instrument]
     fn drop(&mut self) {
         debug!("Dropping OrtOwnedTensor.");
         unsafe { g_ort().ReleaseValue.unwrap()(self.tensor_ptr) }

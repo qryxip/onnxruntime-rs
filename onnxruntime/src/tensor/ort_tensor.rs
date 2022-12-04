@@ -188,7 +188,6 @@ impl OrtValuePtr {
 }
 
 impl Drop for OrtValuePtr {
-    #[tracing::instrument]
     fn drop(&mut self) {
         debug!("Dropping Tensor.");
         if self.c_ptr.is_null() {
