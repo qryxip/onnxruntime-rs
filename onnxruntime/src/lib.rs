@@ -148,21 +148,19 @@ macro_rules! extern_system_fn {
 // textual scopeで`trace!`と`debug!`を宣言することにより、`tracing`のそれらの`use`を封じる
 
 macro_rules! trace {
-    ($($tt:tt)*) => {
+    ($($tt:tt)*) => {{
         if cfg!(allow_verbose_logging) {
-            ::tracing::trace!($($tt)*)
-        } else {
+            ::tracing::trace!($($tt)*);
         }
-    };
+    }};
 }
 
 macro_rules! debug {
-    ($($tt:tt)*) => {
+    ($($tt:tt)*) => {{
         if cfg!(allow_verbose_logging) {
-            ::tracing::debug!($($tt)*)
-        } else {
+            ::tracing::debug!($($tt)*);
         }
-    };
+    }};
 }
 
 pub mod download;
