@@ -1,10 +1,11 @@
 use std::env;
 
 fn main() {
-    if boolean_env_var("ORT_ALLOW_DEBUG_LOGGING") {
-        println!("cargo:rustc-cfg=allow_debug_logging");
+    let debug = env::var("DEBUG").unwrap().parse().unwrap();
+    if debug || boolean_env_var("ORT_ALLOW_VERBOSE_LOGGING_ON_RELEASE") {
+        println!("cargo:rustc-cfg=allow_verbose_logging");
     }
-    println!("cargo:rerun-if-env-changed=ORT_ALLOW_DEBUG_LOGGING");
+    println!("cargo:rerun-if-env-changed=ORT_ALLOW_VERBOSE_LOGGING_ON_RELEASE");
 }
 
 fn boolean_env_var(name: &str) -> bool {

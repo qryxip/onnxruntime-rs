@@ -149,7 +149,7 @@ macro_rules! extern_system_fn {
 
 macro_rules! trace {
     ($($tt:tt)*) => {
-        if cfg!(allow_debug_logging) {
+        if cfg!(allow_verbose_logging) {
             ::tracing::trace!($($tt)*)
         } else {
         }
@@ -158,7 +158,7 @@ macro_rules! trace {
 
 macro_rules! debug {
     ($($tt:tt)*) => {
-        if cfg!(allow_debug_logging) {
+        if cfg!(allow_verbose_logging) {
             ::tracing::debug!($($tt)*)
         } else {
         }
@@ -291,7 +291,7 @@ mod onnxruntime {
             // Parse the code location
             let code_location: CodeLocation = code_location.into();
 
-            let _span = cfg!(allow_debug_logging).then(|| {
+            let _span = cfg!(allow_verbose_logging).then(|| {
                 span!(
                     Level::TRACE,
                     "onnxruntime",
