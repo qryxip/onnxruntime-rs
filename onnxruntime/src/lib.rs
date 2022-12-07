@@ -145,7 +145,7 @@ macro_rules! extern_system_fn {
     ($(#[$meta:meta])* $vis:vis unsafe fn $($tt:tt)*) => ($(#[$meta])* $vis unsafe extern "C" fn $($tt)*);
 }
 
-// textual scopeで`trace!`, `debug!`を宣言することにより、`tracing`のそれらの`use`を封じる
+// textual scopeで`trace!`と`debug!`を宣言することにより、`tracing`のそれらの`use`を封じる
 
 macro_rules! trace {
     ($($tt:tt)*) => {
