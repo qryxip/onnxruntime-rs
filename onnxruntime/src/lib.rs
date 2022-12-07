@@ -145,6 +145,26 @@ macro_rules! extern_system_fn {
     ($(#[$meta:meta])* $vis:vis unsafe fn $($tt:tt)*) => ($(#[$meta])* $vis unsafe extern "C" fn $($tt)*);
 }
 
+// textual scopeで`trace!`, `debug!`を宣言することにより、`tracing`のそれらの`use`を封じる
+
+macro_rules! trace {
+    ($($tt:tt)*) => {
+        if cfg!(allow_debug_logging) {
+            ::tracing::trace!($($tt)*)
+        } else {
+        }
+    };
+}
+
+macro_rules! debug {
+    ($($tt:tt)*) => {
+        if cfg!(allow_debug_logging) {
+            ::tracing::debug!($($tt)*)
+        } else {
+        }
+    };
+}
+
 pub mod download;
 pub mod environment;
 pub mod error;
@@ -205,7 +225,7 @@ mod onnxruntime {
     //! to Rust's tracing logging instead.
 
     use std::ffi::CStr;
-    use tracing::{debug, error, info, span, trace, warn, Level};
+    use tracing::{error, info, span, warn, Level};
 
     use onnxruntime_sys as sys;
 
@@ -271,16 +291,18 @@ mod onnxruntime {
             // Parse the code location
             let code_location: CodeLocation = code_location.into();
 
-            let span = span!(
-                Level::TRACE,
-                "onnxruntime",
-                category = category.to_str().unwrap_or("<unknown>"),
-                file = code_location.file,
-                line_number = code_location.line_number,
-                function = code_location.function,
-                logid = logid.to_str().unwrap_or("<unknown>"),
-            );
-            let _enter = span.enter();
+            let _span = cfg!(allow_verbose_logging).then(|| {
+                span!(
+                    Level::TRACE,
+                    "onnxruntime",
+                    category = category.to_str().unwrap_or("<unknown>"),
+                    file = code_location.file,
+                    line_number = code_location.line_number,
+                    function = code_location.function,
+                    logid = logid.to_str().unwrap_or("<unknown>"),
+                )
+                .entered()
+            });
 
             match log_level {
                 Level::TRACE => trace!("{:?}", message),
