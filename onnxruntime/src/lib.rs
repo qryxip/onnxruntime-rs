@@ -291,7 +291,7 @@ mod onnxruntime {
             // Parse the code location
             let code_location: CodeLocation = code_location.into();
 
-            let _span = cfg!(allow_verbose_logging).then(|| {
+            let _span = cfg!(allow_debug_logging).then(|| {
                 span!(
                     Level::TRACE,
                     "onnxruntime",
