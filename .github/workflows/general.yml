@@ -163,7 +163,7 @@ jobs:
         run: cargo binstall cargo-tarpaulin@^0.23 --no-confirm
       - name: Run cargo-tarpaulin
         run: |
-          cargo tarpaulin --ignore-tests
+          cargo tarpaulin --ignore-tests -o Xml
       - name: Upload to codecov.io
         uses: codecov/codecov-action@v1
         with:
