@@ -435,7 +435,8 @@ impl OnnxPrebuiltArchive for Triplet {
                 Cow::from(format!("{}-{}", self.os.as_onnx_str(), "x64"))
             }
             (Os::Windows, Architecture::X86, Accelerator::None)
-            | (Os::MacOs, Architecture::X86_64, Accelerator::None) => Cow::from(format!(
+            | (Os::MacOs, Architecture::X86_64, Accelerator::None)
+            | (Os::Linux, Architecture::Arm64, Accelerator::None) => Cow::from(format!(
                 "{}-{}",
                 self.os.as_onnx_str(),
                 self.arch.as_onnx_str()
@@ -495,7 +496,7 @@ fn prepare_libort_dir_prebuilt() -> PathBuf {
     let (prebuilt_archive, prebuilt_url) = prebuilt_archive_url();
 
     let out_dir = PathBuf::from(env::var("OUT_DIR").unwrap());
-    let extract_dir = out_dir.join(&format!(
+    let extract_dir = out_dir.join(format!(
         "{}_{}_{}",
         ORT_PREBUILT_EXTRACT_DIR,
         ORT_VERSION,
